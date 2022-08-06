@@ -1,284 +1,744 @@
-// ConsoleApplication1.cpp : Defines the entry point for the console application.
-//
+
 
 #include "stdafx.h"
 #include <iostream>
 #include <stdio.h>
 #include <conio.h>
 #include <time.h>
-int username1 = 0; //username hayi ke agar dorost budand save mishavand
-int username2 = 0;
-int username3 = 0;
-int password1 = 0; //password username avvali ke gharar ast save ast
-int password2 = 0;
-int password3 = 0;
-int needbreak = 0;//zaman hayi ke niaz be break ya continue dar barname ast amma loop dar kharej tavabe vujud darad
-int password = 0; //password hayi ke agar dorost budand save mishavand
-int wrongpassword = 0;//counter baraye tedad dafaate eshtebah vared shode password
-int phonenumbercounter = 0; //counter baraye tedad karbar hayi ke gharar ast vared shavand ke bishtar az 3ta nashavad
-int loginprogress = 0; //amaliyat hayi ke badaz login kardan gharar ast anjam shavad
-void delay(int number_of_seconds) //tabe baraye delay dadan
-{ 
-    // tabdilkardan be milisanie zira vurudie tavabe time.h be milisanie ast
-    int milli_seconds = 1000 * number_of_seconds; 
-  
-    // barabar kardane start time ba clock
-    clock_t start_time = clock(); 
-  
-    // ta zamani ke be delayi ke mikhastim nareside im umur dar yek loope khali bemanad
-    while (clock() < start_time + milli_seconds) 
-        ; 
-} 
-int login(int username,int password) {
-	
-	
-	 if (username == username1) { //agarusername vared shode ba username save shode 1 yeki bud		
-		if (password == password1) { //agar password ba password1 yeki bud
-			while (1)
-			{
-				wrongpassword = 0;
-				system("cls");//pak kardane safhe
-				printf("login progress succesfuly\n");
-				printf("choose one of the following option\n"); //login kamel shod
-				printf("1.send message\n 2.show messages\n 3.creat channel\n 4.creat group\n 5.logout\n");//entekhabe ammaliyat
-				scanf_s("%d", &loginprogress);
-				if (loginprogress == 5) { //logout
-					system("cls");
-					printf("logout progress succesfuly\n");
-					
-					break;
-				}
-				else {
-					system("cls");
-					printf("this progress not exist or not compeleted yet\n");
-					delay(5);
-					continue;
-				}
-			}
+#include <string.h>
+#include "Header.h"
+#include <Windows.h>
+void matneavval(char ** f)  // matni ke vared mikonim hamishe
+{
+	printf(">>");
+	for (int i = 0; 1; i++) {
+		if (i) *f = (char*)realloc((*f), i + 1);
+		else *f = (char*)malloc(i + 1);
+		(*f)[i] = getchar();
+		if ((*f)[i] == '\n') {
+			(*f)[i] = '\0';
+			break;
 		}
-		else {
-			system("cls");
-			printf("wrong password! try again\n");
-			wrongpassword++;
-			needbreak = 2;
-			return needbreak;
-		}
-	}
-	else if (username == username2) { // haman comment haye ghabli serfan baraye username2
-		if (password == password2) {
-			while (1)
-			{
-				wrongpassword = 0;
-				system("cls");
-				printf("login progress succesfuly\n");
-				printf("choose one of the following option\n");
-				printf("1.send message\n 2.show messages\n 3.creat channel\n 4.creat group\n 5.logout\n");
-				scanf_s("%d", &loginprogress);
-				if (loginprogress == 5) {
-					system("cls");
-					printf("logout progress succesfuly\n");
-					break;
-				}
-				else {
-					system("cls");
-					printf("this progress not exist or not compeleted yet\n");
-					delay(5);
-					continue;
-				}
-			}
-		}
-		else {
-			system("cls");
-			printf("wrong password! try again\n");
-			wrongpassword++;
-			needbreak = 2;
-			return needbreak;
-		}
-	}
-	else if (username == username3) {
-		if (password == password3) {
-			while (1)
-			{
-				wrongpassword = 0;
-				system("cls");
-				printf("login progress succesfuly\n");
-				printf("choose one of the following option\n");
-				printf("1.send message\n 2.show messages\n 3.creat channel\n 4.creat group\n 5.logout\n");
-				scanf_s("%d", &loginprogress);
-				if (loginprogress == 5) {
-					system("cls");
-					printf("logout progress succesfuly\n");
-					break;
-				}
-				else {
-					system("cls");
-					printf("this progress not exist or not compeleted yet\n");
-					delay(5);
-					continue;
-				}
-			}
-		}
-		else {
-			system("cls");
-			printf("wrong password! try again\n");
-			wrongpassword++;
-			needbreak = 2;
-			return needbreak;
-		}
-	}
-	else {//agar username vared shode az ghabl vujud nadasht
-		system("cls");
-		printf("this username does not exist\n");
-		needbreak = 1;//haman break
-		return needbreak;
 	}
 }
-int signup(int username) {
-	if (username >100000000 && username< 10000000000 && username != username1 && username != username2 && username != username3) { //check konim ke aya username sahih ast ya tekrari nabashad
-		while (1) { //ta zamani ke passworde dorosti vared nashode ast
-			printf("enter your password:\n");
-			scanf_s("%d", &password); //gereftane password
-			if (password > 999999 || password < 0) { //check konim ke passworde sahihi vared shode ast ya na
-				system("cls");
-				printf("password must be maximum 6digit\n");
+
+struct userMessage* new_message(char* content,int senderID,int recieverID,int *messageID,struct Date* messageDate) { //tabe baraye ezafe kardane message be kolle message ha
+	struct userMessage * temp = (struct userMessage*)malloc(sizeof(struct userMessage));
+	temp->content = (char *)malloc(sizeof(content));
+	strcpy(temp->content, content);
+	temp->receiverID = recieverID;
+	temp->senderID = senderID;
+	temp->id = *messageID;
+	temp->date.day = messageDate->day;
+	temp->date.month = messageDate->month;
+	temp->date.year = messageDate->year;
+	temp->date.hour = messageDate->hour;
+	temp->date.min = messageDate->min;
+	temp->status = 0;
+	temp->next = NULL;
+	return temp;
+}
+
+struct user *new_user(char*username,char *password,long long int phonenumber,int sentpmamount, int *phonenumbercounter) {//tabe baraye ezafe kardane user ba userha
+	struct user * temp = (struct user*)malloc(sizeof(struct user));
+	temp->username = (char*)malloc(sizeof(char)*(strlen(username)));
+	temp->password = (char*)malloc(sizeof(char)*(strlen(password)));
+	strcpy(temp->username, username);
+	strcpy(temp->password, password);
+	temp->phonenumber = phonenumber;
+	temp->sentpmamount = sentpmamount;
+	temp->id = *phonenumbercounter;
+	temp->next = NULL;
+	return temp;
+}
+
+int usernamechecker(char *username, struct user*users) { //tabe baraye check kardane username hayi ke vared mishavad
+	int equalusername = -1;
+	while (users!=NULL) {
+		int compare = strcmp(username, users->username);
+		if (compare == 0) { //agar username ra peyda kard
+			equalusername = users->id;
+			break;
+		}
+		else {
+			users = users->next;
+		}
+	}
+
+	return equalusername;
+}
+
+int phonenumberchecker(long long int *phonenumber,struct user*users) { //tabe baraye shomare telephone hayi ke vared mishavad
+	int equalphonenumber = -1;
+	if (*phonenumber < 100000000 || *phonenumber > 10000000000) {
+		printf("\tphonenumber format is wrong!\n");
+		equalphonenumber = -2;
+	}
+	else if (*phonenumber > 100000000 && *phonenumber < 10000000000) {
+		while (users != NULL) {
+			if (*phonenumber == users->phonenumber) {
+				equalphonenumber = 1;
+				break;
 			}
-			else {//agar password sahih bud ...
-				phonenumbercounter++;
-				if (phonenumbercounter == 1) {//agar avvalin nafar bud dar username1 save shavad
-					password1 = password;
-					printf("re-enter your password:\n");
-					scanf_s("%d", &password);
-					if (password == password1) { //check konim ke password hara eyne ham vared karde bashad
-						system("cls");
-						printf("signup progress succesfuly\n");
-						username1 = username;
-						break;
-					}
-					else {
-						system("cls");
-						printf("passwords doesnt match\n"); //agar password ha yeki nabud :
-						continue;
-					}
-				}
-				if (phonenumbercounter == 2) {//agar dovomin nafar bud dar username1 save shavad
-					password2 = password;
-					printf("re-enter your password:\n");
-					scanf_s("%d", &password);
-					if (password == password2) {//check konim ke password hara eyne ham vared karde bashad
-						system("cls");
-						printf("signup progress succesfuly\n");
-						username2 = username;
-						break;
-					}
-					else {
-						system("cls");
-						printf("passwords doesnt match\n");
-						continue;
-					}
-				}
-				if (phonenumbercounter == 3) {//agar 3vomin nafar bud dar username1 save shavad
-					password3 = password;
-					printf("re-enter your password:\n");
-					scanf_s("%d", &password);
-					if (password == password3) {//check konim ke password hara eyne ham vared karde bashad
-						system("cls");
-						printf("signup progress succesfuly\n");
-						username3 = username;
-						break;
-					}
-					else {
-						system("cls");
-						printf("passwords doesnt match\n");
-						continue;
-					}
-				}
+			else {
+				users = users->next;
 			}
 		}
-		needbreak = 1;
-		return needbreak;
+	}
+	return equalphonenumber;
+}
+
+int passwordchecker(char* password, struct user*users,char *username) {//tabe baraye check kardane password hayi ke vared mishavand
+	int equalpassword = -1;
+	if (strlen(password) < 6) {
+		printf("\tpassword must be at least 6 digits\n");
+		equalpassword = -2;
 	}
 	else {
-		printf("wrong phone number format or this number exist\n");//agar username sahih nabud
-		needbreak = 2;
-		return needbreak;
+		while (users != NULL) {
+			int compare = strcmp(username, users->username);
+			if (compare == 0) { //agar username ra peyda kard
+				break;
+			}
+			else {
+				users = users->next;
+			}
+		}
+			int compare = strcmp(password, users->password);
+			if (compare == 0) { //agar password ba username hamkhani dasht
+				equalpassword = users->id;
+			}
 	}
-	
+	return equalpassword;
 }
+
+int signup_passwordchecker(char* password, struct user*users, char *username) {//tabe baraye check kardane password avvali ke dar signup vared mishavand
+	int equalpassword = -1;
+	if (strlen(password) < 6) {
+		printf("\tpassword must be at least 6 digits\n");
+		equalpassword = -2;
+	}
+	else {
+		
+		equalpassword = 0;
+	}
+	return equalpassword;
+}
+
+int sendmessage(char *username, int *senderID, struct user*users, struct userMessage* messages,char* message,int *messageID) {//tabe baraye ferestadane message
+	int sentmessage = 0;
+	int recieverID = usernamechecker(username, users);
+	if (recieverID != -1) { //agar username vujud dasht
+		(*messageID)++;
+		time_t rawtime;
+		struct tm * timeinfo;
+		time(&rawtime);
+		timeinfo = localtime(&rawtime);
+		struct Date currenttime;
+		currenttime.day = timeinfo->tm_mday;
+		currenttime.hour = timeinfo->tm_hour;
+		currenttime.min = timeinfo->tm_min;
+		currenttime.month = timeinfo->tm_mon;
+		currenttime.year = timeinfo->tm_year;
+		while (messages->next != NULL) {
+			messages = messages->next;
+		}
+		messages->next=new_message(message, *senderID, recieverID, messageID, &currenttime);
+			sentmessage = 1;
+	}
+	else { //agar username vujud nadasht
+		printf("\tuser not found!\n");
+		sentmessage = 404;
+	}
+	return sentmessage;
+}
+int showmessage(char *username, struct userMessage *messages, int *senderorrecieverID, struct user*users, int *showmessageprogress) {//tabe baraye neshan dadane message ha
+	int showmessageresult = 0;
+	int recieverorsenderID = usernamechecker(username, users);
+	if (recieverorsenderID != -1) { //agar username vujud dasht
+		if (*showmessageprogress == 1) {//we have the reciever
+			while (messages != NULL) {
+				if (messages->receiverID == *senderorrecieverID && messages->senderID==recieverorsenderID) {
+					if (messages->id != 0) {
+							printf("\tsender username:%s\n", username);
+							printf("\tmessage content:%s\n", messages->content);
+							printf("\tmessage date-> year:%d month:%d day:%d hour:%d min:%d \n", messages->date.year, messages->date.month, messages->date.day, messages->date.hour, messages->date.min);
+							printf("\tmessage ID:%d\n", messages->id);
+							messages->status = 1;
+							messages = messages->next;
+					}
+					else { //agar message vujud nadasht
+						printf("\tthere is no messages yet :(\n");
+						showmessageresult = 9;
+					}
+				}
+				else {
+					messages = messages->next;
+				}
+			}
+		}
+		else if (*showmessageprogress == 2) {//we have the sender
+				while (messages != NULL) {
+					if (messages->receiverID == recieverorsenderID && messages->senderID == *senderorrecieverID ) {
+						if (messages->id != 0) {
+							if (messages->status == 0) {
+								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);
+								printf("\treciever username:%s\n", username);
+								printf("\tmessage content:%s\n", messages->content);
+								printf("\tmessage date-> year:%d month:%d day:%d hour:%d min:%d \n", messages->date.year, messages->date.month, messages->date.day, messages->date.hour, messages->date.min);
+								printf("\tmessage ID:%d\n", messages->id);
+								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+								messages->status = 0;
+								messages = messages->next;
+							}
+							else {
+								printf("\treciever username:%s\n", username);
+								printf("\tmessage content:%s\n", messages->content);
+								printf("\tmessage date-> year:%d month:%d day:%d hour:%d min:%d \n", messages->date.year, messages->date.month, messages->date.day, messages->date.hour, messages->date.min);
+								printf("\tmessage ID:%d\n", messages->id);
+								messages->status = 0;
+								messages = messages->next;
+							}
+						}
+						else { //agar message vujud nadasht
+							printf("\tthere is no messages yet :(\n");
+							showmessageresult = 9;
+						}
+					}
+					else {
+						messages = messages->next;
+					}
+				}
+		}
+	}
+	else { // agar username vujud ndasht
+		printf("\tuser not found!\n");
+		showmessageresult = 404;
+	}
+	return showmessageresult;
+}
+void delay(int number_of_seconds) //tabe baraye delay dadan
+{
+	// tabdilkardan be milisanie zira vurudie tavabe time.h be milisanie ast
+	int milli_seconds = 1000 * number_of_seconds;
+
+	// barabar kardane start time ba clock
+	clock_t start_time = clock();
+
+	// ta zamani ke be delayi ke mikhastim nareside im umur dar yek loope khali bemanad
+	while (clock() < start_time + milli_seconds)
+		;
+}
+void info(struct user*users) { //tabe info baraye peyda kardane kolle username ha
+	int info_progress = 0;
+	printf("\tusernames:\n");
+	while (users != NULL) {
+		if (users->id != 0) {
+			info_progress = 1;
+			printf("\t%s\n", users->username);
+			users = users->next;
+		}
+		else {
+			users = users->next;
+		}
+	}
+	if (info_progress == 0) {
+		printf("\tthere is no users yet\n");
+	}
+}
+void about(struct user*users, char *username) { //tabe baraye peyda kardane shomare telephone yek username
+	int about_progress = 0;
+	while (users != NULL) {
+		int compare = strcmp(username, users->username);
+		if (compare == 0) {
+			about_progress = 1;
+			printf("\tusername:%s\n", users->username);
+			printf("\tphonenumber:%lld\n", users->phonenumber);
+			break;
+		}
+		else {
+			users = users->next;
+		}
+	}
+	if (about_progress == 0) {
+		printf("\tusername not found!\n");
+	}
+}
+void edit_username(char* username, struct user*users,char* newusername) { //tabe baraye esit kardane username
+	int username_cheker = usernamechecker(username, users);
+	if (username_cheker == -1) {
+		while (users != NULL) {
+			int compare = strcmp(username, users->username);
+			if (compare == 0) {
+				users->username = (char*)realloc(newusername, sizeof(newusername));
+				strcpy(users->username, newusername);
+				printf("\tusername changed!\n");
+			}
+			else {
+				users = users->next;
+			}
+		}
+	}
+	else {
+		printf("\tthis username exist!\n");
+	}
+}
+void edit_password(char* username, struct user*users,char* newpassword) { //tabe baraye edit kardane password
+	while (users != NULL) {
+		int compare = strcmp(username, users->username);
+		if (compare == 0) {
+			int compare2 = strcmp(users->password, newpassword);
+			if (compare2 == 0) {
+				users->password = (char*)realloc(newpassword, sizeof(newpassword));
+				strcpy(users->password, newpassword);
+				break;
+			}
+			else {
+				printf("\tyour current password and new password are same!\n");
+				break;
+			}
+		}
+		else {
+			users = users->next;
+		}
+	}
+	printf("\tpassword changed\n");
+}
+char* username_finder(int ID, struct user* users) { //tabe baraye peyda kardane username az ruye ID 
+	int username_finder_progress = 0;
+	char* username = NULL;
+	while (users != NULL) {
+		if (users->id == ID) {
+			username_finder_progress = 1;
+			username = (char*)malloc(sizeof(char)*(strlen(users->username)));
+			strcpy(username, users->username);
+			break;
+		}
+		else {
+			users = users->next;
+		}
+	}
+	if (username_finder_progress == 0) {
+		printf("\tthere is no username with this ID\n");
+	}
+	return username;
+}
+void recieved_messages(struct userMessage *messages, struct user*users,int* recieverID) { //tabe baraye didane message haye daryafti moghe login kardan
+	while (messages != NULL) {
+		if (messages->receiverID == *recieverID) {
+			int senderID = messages->senderID;
+			char* sender_username = NULL;
+			sender_username = (char*)malloc(sizeof(char)*(strlen(username_finder(senderID,users))));
+			strcpy(sender_username, username_finder(senderID, users));
+			printf("\tyou have message from :%s\n", sender_username);
+			printf("\tmessage date-> year:%d month:%d day:%d hour:%d min:%d \n", messages->date.year, messages->date.month, messages->date.day, messages->date.hour, messages->date.min);
+			messages = messages->next;
+			continue;
+		}
+		else {
+			messages = messages->next;
+		}
+	}
+}
+void login(struct user*users, int *wrongpassword, int *phonenumbercounter, struct userMessage *messages, char *username, char* password,int *messageID) {
+	while (1)
+	{
+		if (*wrongpassword > 2) {//check kardane inke chand bar ramz eshtebah vared shode ast
+			printf("\ttoo many attempts login is locked!\ntry to login after 30s\n");
+			*wrongpassword = 0;
+			delay(30);//30 sanie delay
+			continue;
+		}
+		int logout=0;
+		int userID = 0;
+		int usernamecheck = usernamechecker(username, users);
+		int passwordcheck = passwordchecker(password, users,username);
+		if (passwordcheck == usernamecheck) { //agar password ba username hamkhani dasht
+			*wrongpassword = 0;
+			userID = passwordcheck;
+			printf("\tlogin progress succesfuly\n");
+			recieved_messages(messages, users, &userID);
+			while (1) {
+				char* matnevurudi = NULL;
+				matneavval(&matnevurudi);
+				matnevurudi = strtok(matnevurudi, " ");
+				char edit_usernamee[15] = "edit_username";
+				char edit_passs[15] = "edit_pass";
+				char sendd[15] = "send";
+				char infoo[15] = "info";
+				char aboutt[15] = "about";
+				char show_recievedd[15] = "show_recieved";
+				char show_sentt[15] = "show_sent";
+				char logoutt[15] = "logout";
+				char* dastooreaval = NULL;
+				dastooreaval = (char*)malloc(sizeof(char)*(strlen(matnevurudi)));
+				strcpy(dastooreaval, matnevurudi);
+				int loginprogress = 0;
+				loginprogress = strcmp(dastooreaval, logoutt);
+				int control_vurudi = 0;
+				if (loginprogress == 0) { //logout
+					control_vurudi = 1;
+					printf("\tlogout progress succesfuly\n");
+					logout = 85;
+					break;
+				}
+					loginprogress = strcmp(dastooreaval, sendd);
+					if (loginprogress == 0) {
+						control_vurudi = 1;
+						char *recieverusername;
+						char *message;
+						for (int i = 0; i < 3; i++) {
+							if (i == 0) {
+								matnevurudi = strtok(NULL, " ");
+							}
+							if (i == 1) {
+								recieverusername = (char*)malloc(sizeof(char)*(strlen(matnevurudi)));
+								strcpy(recieverusername, matnevurudi);
+								matnevurudi = strtok(NULL, " ");
+							}
+							if (i == 2) {
+								message = (char*)malloc(sizeof(char)*(strlen(matnevurudi)));
+								strcpy(message, matnevurudi);
+								matnevurudi = strtok(NULL, " ");
+							}
+						}
+							int sentmessage = sendmessage(recieverusername, &userID, users, messages, message, messageID);
+							if (sentmessage == -1) {
+								continue;
+							}
+							else if (sentmessage == 1) {
+								printf("\tmessage sent succesfuly!\n");
+								continue;
+							}
+							else if (sentmessage == 404) {
+								printf("\ttry again:)\n");
+								continue;
+							}
+						}
+					
+						int showmessageprogress = 0;
+						loginprogress = strcmp(dastooreaval, show_recievedd);
+						if (loginprogress == 0) {
+							control_vurudi = 1;
+							showmessageprogress = 1;
+							char *senderusername;
+							for (int i = 0; i < 2; i++) {
+								if (i == 0) {
+									matnevurudi = strtok(NULL, " ");
+								}
+								if (i == 1) {
+									senderusername = (char*)malloc(sizeof(char)*(strlen(matnevurudi)));
+									strcpy(senderusername, matnevurudi);
+									matnevurudi = strtok(NULL, " ");
+								}
+							}
+							showmessage(senderusername, messages, &userID, users, &showmessageprogress);
+							continue;
+						}
+						loginprogress = strcmp(dastooreaval, show_sentt);
+						if (loginprogress == 0) {
+							control_vurudi = 1;
+							showmessageprogress = 2;
+							char *recieverusername;
+							for (int i = 0; i < 2; i++) {
+								if (i == 0) {
+									matnevurudi = strtok(NULL, " ");
+								}
+								if (i == 1) {
+									recieverusername = (char*)malloc(sizeof(char)*(strlen(matnevurudi)));
+									strcpy(recieverusername, matnevurudi);
+									matnevurudi = strtok(NULL, " ");
+								}
+						}
+							showmessage(recieverusername, messages, &userID, users, &showmessageprogress);
+							continue;
+					}
+					loginprogress = strcmp(dastooreaval, infoo);
+					if (loginprogress == 0) {
+						control_vurudi = 1;
+						info(users);
+						continue;
+					}
+					loginprogress = strcmp(dastooreaval, aboutt);
+					if (loginprogress == 0) {
+						control_vurudi = 1;
+						char *aboutusername;
+						for (int i = 0; i < 2; i++) {
+							if (i == 0) {
+								matnevurudi = strtok(NULL, " ");
+							}
+							if (i == 1) {
+								aboutusername = (char*)malloc(sizeof(char)*(strlen(matnevurudi)));
+								strcpy(aboutusername, matnevurudi);
+								matnevurudi = strtok(NULL, " ");
+							}
+						}
+						about(users, aboutusername);
+						continue;
+					}
+					loginprogress = strcmp(dastooreaval, edit_usernamee);
+					if (loginprogress == 0) {
+						control_vurudi = 1;
+						char *editusername;
+						for (int i = 0; i < 2; i++) {
+							if (i == 0) {
+								matnevurudi = strtok(NULL, " ");
+							}
+							if (i == 1) {
+								editusername = (char*)malloc(sizeof(char)*(strlen(matnevurudi)));
+								strcpy(editusername, matnevurudi);
+								matnevurudi = strtok(NULL, " ");
+							}
+						}
+						edit_username(username, users, editusername);
+						continue;
+					}
+					loginprogress = strcmp(dastooreaval, edit_passs);
+					if (loginprogress == 0) {
+						control_vurudi = 1;
+						char *editpass;
+						for (int i = 0; i < 2; i++) {
+							if (i == 0) {
+								matnevurudi = strtok(NULL, " ");
+							}
+							if (i == 1) {
+								editpass = (char*)malloc(sizeof(char)*(strlen(matnevurudi)));
+								strcpy(editpass, matnevurudi);
+								matnevurudi = strtok(NULL, " ");
+							}
+						}
+						edit_password(username, users, editpass);
+						continue;
+					}
+					if (control_vurudi == 0) {
+						printf("\tthere is no progress with this text you entered or you are not allowed to do that\n");
+						continue;
+					}
+			}
+			if (logout == 85) {
+				logout = 0;
+				break;
+			}
+		}
+		else if (usernamecheck != passwordcheck) {
+			(*wrongpassword)++;
+			break;
+		}
+	}
+}
+
+int signup(struct user*users, int *phonenumbercounter, char *username,char* password,long long int phonenumber) {
+	int signup_progress = 0;
+	while (1) { //ta zamani ke passworde dorosti vared nashode ast
+		
+		int phonenumbercheck = phonenumberchecker(&phonenumber, users);
+		if (phonenumbercheck == -1) { //check konim ke aya phone number sahih ast ya tekrari nabashad
+			
+			int passwordcheck = signup_passwordchecker(password, users,username);
+			if (passwordcheck == -2) { //check konim ke passworde sahihi vared shode ast ya na
+				break;
+			}
+			else {//agar password sahih bud ...
+					int usernamecheck = usernamechecker(username, users);
+					if (usernamecheck == -1) { //agar username tekrari nabud
+						(*phonenumbercounter)++;
+						while (users->next != NULL) {
+							users = users->next;
+						}
+						users->next = new_user(username, password, phonenumber, 0, phonenumbercounter);
+						printf("\tsignup progress succesfuly\n");
+						signup_progress = 1;
+						break;
+					}
+					else {
+						printf("\tusername exist!\n");
+						break;
+					}
+			}
+		}
+		else if (phonenumbercheck == -2) {
+			break;
+		}
+		else if(phonenumbercheck>=0){
+			printf("\tphonenumber exist already!   try again\n");
+			continue;
+		}
+	}
+	return signup_progress;
+}
+
+void write_info(struct user*users) {
+	FILE *info;
+	info = fopen("info.txt", "w");
+	while (users!=NULL) {
+			fprintf(info,"%s,%s,%lld,",users->username, users->password,users->phonenumber);
+			fprintf(info, "\n");
+			users = users->next;
+		}
+		fclose(info);
+}
+
+void write_messages(struct userMessage* messages, struct user*users) {
+	FILE *message;
+	message = fopen("messages.txt", "w");
+	while (messages != NULL) {
+		char* sender_username = NULL;
+		sender_username= (char*)malloc(sizeof(char)*(strlen(username_finder(messages->senderID, users))));
+		strcpy(sender_username, username_finder(messages->senderID, users));
+		char* reciever_username = NULL;
+		reciever_username = (char*)malloc(sizeof(char)*(strlen(username_finder(messages->receiverID, users))));
+		strcpy(reciever_username, username_finder(messages->receiverID, users));
+		fprintf(message, "%s,%s,%s,%d,%d,%d,%d,%d", sender_username, reciever_username, messages->content,messages->date.year, messages->date.month, messages->date.day, messages->date.hour, messages->date.min);
+		fprintf(message, "\n");
+		messages = messages->next;
+	}
+	fclose(message);
+}
+//int setNext(char info[MAX_PM],	char fileContent[MAX_NUM * MAX_NUM * (MAX_PM_AMOUNT + 2) * MAX_PM],	int cursor) {
+//	int i;
+//	// the cursor proceeds until it reaches a comma(as comma is the delimiter here)
+//	for (i = cursor; fileContent[i] != ',' && fileContent[i] != '\n'; i++) {
+//		info[i - cursor] = fileContent[i];
+//	}
+//	return i + 1;
+//}
+//int setNext2(long long int phonenumber, char fileContent[MAX_NUM * MAX_NUM * (MAX_PM_AMOUNT + 2) * MAX_PM], int cursor) {
+//	int i;
+//	// the cursor proceeds until it reaches a comma(as comma is the delimiter here)
+//	char info[MAX_PM];
+//	for (i = cursor; fileContent[i] != ',' && fileContent[i] != '\n'; i++) {
+//		info[i - cursor] = fileContent[i];
+//	}
+//	phonenumber = atoi(info);
+//	return i + 1;
+//}
+//void readFromFile(char messages[MAX_NUM][MAX_NUM][MAX_PM_AMOUNT][MAX_PM], struct user*users) {
+//
+//	FILE* file = fopen("datas.txt", "r");
+//	if (file != NULL) {
+//		char fileContent[MAX_NUM * MAX_NUM * (MAX_PM_AMOUNT + 2) *MAX_PM];
+//		// read all the contents of the input file
+//		fread(fileContent, sizeof(char), MAX_NUM * MAX_NUM * (MAX_PM_AMOUNT + 2) * MAX_PM, file);
+//		fclose(file);
+//		int cursor = 0;
+//		for (int i = 0; i < MAX_NUM; i++) {
+//			// find the next feature in input file contents and set them as the features of existing users
+//			cursor = setNext(users[i].username, fileContent, cursor);
+//			cursor = setNext(users[i].password, fileContent, cursor);
+//			cursor = setNext2(users[i].phonenumber, fileContent, cursor);
+//			for (int j = 0; j < MAX_NUM; j++) {
+//				for (int k = 0; k < MAX_PM_AMOUNT; k++) {
+//					cursor = setNext(messages[i][j][k], fileContent, cursor);
+//				}
+//			}
+//		}
+//	}
+//}
 
 int main()
 {
-	int username = 0; //username i ke hardafe vared mikonand
+	int zero = 0;
+	struct user* head = new_user("head", "head",0,0,&zero);
+	struct user* users = head;
+	struct Date fhead;
+	fhead.day = 0;
+	fhead.hour = 0;
+	fhead.min = 0;
+	fhead.month = 0;
+	fhead.year = 0;
+	int headmessage = 0;
+	struct userMessage* Head = new_message("head", 0, 0, &headmessage, &fhead);
+	struct userMessage* messages = Head;
+	int wrongpassword = 0;//counter baraye tedad dafaate eshtebah vared shode password
+	int phonenumbercounter = 0;
+	int messageID = 0;
 	int progress = 0; //ammaliyat hayi ke gharar ast bedune login kardan anjam dade shavad
+	printf("Welcome to UTmessenger\n"); //payam haye vurudi barname
+	printf("Please enter your command\n");
+	printf("*************************\n");
 	while (1) {
-		printf("welcome yo UTmessenger\n"); //payam haye vurudi barname
-		printf("please choose one of the following options\n");
-		printf("1 to signup\t2 to login\t3 to quit\n");
-		scanf_s("%d", &progress); //gereftane shomare amaliyati ke gharar ast anjam shavad
-		if (progress == 1) { //amaliyate signup
-			system("cls");
-			if (phonenumbercounter < 3) { //motmaen shavim ke bishtar az 3karbar sabtnam nmikonad
-				while (1) { //ta zamani ke sabtnam kamel nashode ast edame dahad
-					printf("Enter your phone number: \n");
-					scanf_s("%d", &username); //gereftan username
-					signup(username);
-					if (needbreak == 1) {//agar niaz be break bud
-						needbreak = 0;
-						break;
-						
+		
+		char* matnevurudi = NULL;
+		matneavval(&matnevurudi);
+		matnevurudi = strtok(matnevurudi, " ");
+		char signupp[15] = "signup";
+		char loginn[15] = "login";
+		char closee[15] = "close";
+		char* dastooreaval = NULL;
+		int control_vurudi = 0;
+		dastooreaval = (char*)malloc(sizeof(char)*(strlen(matnevurudi)));
+		strcpy(dastooreaval, matnevurudi);
+		progress = strcmp(dastooreaval, signupp);
+		if (progress == 0) { //amaliyate signup
+			control_vurudi = 1;
+				char* username = NULL;
+				char* pass = NULL;
+				long long int phonenumber = 0;
+				for (int i = 0; i < 4; i++) {
+					if (i == 0) {
+						matnevurudi = strtok(NULL, " ");
 					}
-					if (needbreak == 2) {//agar niaz be continue bud
-						needbreak = 0;
-						continue;
-						
+					if (i == 1) {
+						username = (char*)malloc(sizeof(char)*(strlen(matnevurudi)));
+						strcpy(username, matnevurudi);
+						matnevurudi = strtok(NULL, " ");
+					}
+					if (i == 2) {
+						pass = (char*)malloc(sizeof(char)*(strlen(matnevurudi)));
+						strcpy(pass, matnevurudi);
+						matnevurudi = strtok(NULL, " ");
+					}
+					if (i == 3) {
+						phonenumber = atoll(matnevurudi);
+						matnevurudi = strtok(NULL, " ");
 					}
 				}
-			}
-			else {
-				system("cls");
-				printf("no room to join our community :) \n");//agar 3ta username ha porshode bud
+				int signup_progress=signup(users,&phonenumbercounter,username,pass,phonenumber);
+				if (signup_progress == 1) {
+					login(users, &wrongpassword, &phonenumbercounter, messages, username, pass, &messageID);
+				}
 				continue;
-			}
 		}
-		if (progress == 2) { //login
-			system("cls");
-			printf("Enter your phone number: \n");
-			scanf_s("%d", &username);
-			printf("enter your password:\n");
-			scanf_s("%d", &password);
-			login(username,password);
-			if (wrongpassword > 2) {//check kardane inke chand bar ramz eshtebah vared shode ast
-				system("cls");//pak kardane safhe
-							  //printf("%d\n", password1);
-				printf("too many attempts login is locked!\ntry to login after 30s\n");
-				wrongpassword = 0;
-				delay(30);//30 sanie delay
-				needbreak = 2;//haman continue
-				return needbreak;
+			progress = strcmp(dastooreaval, loginn);
+			if (progress == 0) {
+				control_vurudi = 0;
+				char* username = NULL;
+				char* pass = NULL;
+				for (int i = 0; i < 3; i++) {
+					if (i == 0) {
+						matnevurudi = strtok(NULL, " ");
+					}
+					if (i == 1) {
+						username = (char*)malloc(sizeof(char)*(strlen(matnevurudi)));
+						strcpy(username, matnevurudi);
+						matnevurudi = strtok(NULL, " ");
+					}
+					if (i == 2) {
+						pass = (char*)malloc(sizeof(char)*(strlen(matnevurudi)));
+						strcpy(pass, matnevurudi);
+						matnevurudi = strtok(NULL, " ");
+					}
+				}
+				login(users, &wrongpassword, &phonenumbercounter, messages,username,pass,&messageID);
 			}
-			if (needbreak == 1) {
-				needbreak = 0;
+			progress = strcmp(dastooreaval, closee);
+			if (progress == 0) {
+				control_vurudi = 0;
+				write_info(users);
+				write_messages(messages, users);
 				break;
-				
 			}
-			if (needbreak == 2) {
-				needbreak = 0;
+			if (control_vurudi == 0) {
+				printf("\tthere is no progress with this text you entered or you are not allowed to do that\n");
 				continue;
-				
 			}
-		}
-		if (progress == 3) {//amaliyate exit
-			system("cls");
-			break;
-		}
-		if (progress < 0 || progress>3) {//agar amaliyate vared shode kollan vujud nadasht
-			printf("there is no progress for this number     try again\n");
-			continue;
-		}
-
 	}
-
+	
+	
 
 	system("PAUSE");
-    return 0;
+	return 0;
 }
+
+
 
